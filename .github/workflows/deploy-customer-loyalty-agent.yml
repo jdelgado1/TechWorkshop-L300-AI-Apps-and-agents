@@ -31,16 +31,21 @@ jobs:
 
       - name: Create .env for script
         working-directory: src
+        env:
+          ENV_CONTENT: ${{ secrets.ENV }}
         run: |
-          printf "%s\n" "${{ secrets.ENV }}" > .env
+          printenv ENV_CONTENT > .env
           sed -i 's/\r$//' .env
 
       - name: Verify .env
         working-directory: src
         run: |
           echo "Lines in .env: $(wc -l < .env)"
+          echo "Non-empty lines: $(grep -c '.' .env || true)"
           echo "Has COSMOS_ENDPOINT: $(grep -c 'COSMOS_ENDPOINT' .env || true)"
           echo "Has FOUNDRY_ENDPOINT: $(grep -c 'FOUNDRY_ENDPOINT' .env || true)"
+          echo "First 5 variable names:"
+          grep -oP '^[A-Za-z_][A-Za-z0-9_]*(?==)' .env | head -5 || true
 
       - name: Install dependencies
         working-directory: src
