@@ -37,7 +37,7 @@ jobs:
       - name: Install dependencies
         working-directory: src
         run: |
-          pip install azure-ai-projects azure-ai-agents azure-identity python-dotenv azure-monitor-opentelemetry opentelemetry-sdk opentelemetry-instrumentation-openai-v2 openai mcp httpx
+          pip install -r requirements.txt
 
       - name: Deploy Customer Loyalty Agent
         working-directory: src
