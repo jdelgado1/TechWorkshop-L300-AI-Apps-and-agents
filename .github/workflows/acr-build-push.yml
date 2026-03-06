@@ -30,8 +30,11 @@ jobs:
       # This file is NOT committed; it exists only on the ephemeral runner.
       - name: Create .env for Docker build (from secret)
         working-directory: src
+        env:
+          ENV_CONTENT: ${{ secrets.ENV }}
         run: |
-          printf "%s" "${{ secrets.ENV }}" > .env
+          printenv ENV_CONTENT > .env
+          sed -i 's/\r$//' .env
 
       # Build context is src/ (so ONLY src/ files are sent to the Docker daemon).
       - name: Build and push image
