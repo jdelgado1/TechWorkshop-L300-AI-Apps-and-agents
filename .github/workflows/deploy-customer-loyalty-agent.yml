@@ -32,7 +32,15 @@ jobs:
       - name: Create .env for script
         working-directory: src
         run: |
-          printf "%s" "${{ secrets.ENV }}" > .env
+          printf "%s\n" "${{ secrets.ENV }}" > .env
+          sed -i 's/\r$//' .env
+
+      - name: Verify .env
+        working-directory: src
+        run: |
+          echo "Lines in .env: $(wc -l < .env)"
+          echo "Has COSMOS_ENDPOINT: $(grep -c 'COSMOS_ENDPOINT' .env || true)"
+          echo "Has FOUNDRY_ENDPOINT: $(grep -c 'FOUNDRY_ENDPOINT' .env || true)"
 
       - name: Install dependencies
         working-directory: src
@@ -45,6 +53,7 @@ jobs:
           set -a
           source .env
           set +a
+          echo "COSMOS_ENDPOINT is set: ${COSMOS_ENDPOINT:+yes}"
           python app/agents/customerLoyaltyAgent_initializer.py
 
       - name: Remove .env
