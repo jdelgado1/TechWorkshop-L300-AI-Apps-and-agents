@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
+
 from opentelemetry import trace
 from azure.monitor.opentelemetry import configure_azure_monitor
 from azure.ai.agents.telemetry import trace_function
